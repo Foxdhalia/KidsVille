@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MenuSceneAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 7a0cdf74fc63ccd48a8861c968988f5b, type: 3}
+    totalSpriteSurfaceArea: 1553663
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: b4ee00d15b102044283dcdbd8dd2784b, type: 3}
+  - {fileID: 21300000, guid: 96eb5ab26a3cf8d45907cc11ff0170f2, type: 3}
+  - {fileID: 21300000, guid: c46afad6b1ae24f40a88205cb7b838a7, type: 3}
+  - {fileID: 21300000, guid: dd654d499414d144c9af0e8de388c6b3, type: 3}
+  - {fileID: 21300000, guid: 2327ea2f5cc62fb439a59bbdd221b05e, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - LoadingBarBase
+  - LoadingTexto
+  - LoadingBarFill
+  - base
+  - LoadingBarLimite
+  m_Tag: MenuSceneAtlas
+  m_IsVariant: 0

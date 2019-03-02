@@ -1,0 +1,24 @@
+||||custo mult|2|
+id|Nome|Descrição|custo H|custo E|custo R|Custo
+1|Escola no bairro|Um dos bairros da sua cidade está carente de uma escola primária nova. Vamos construir uma?|0|4|0|8
+2|Novas Empresas|A prefeitura tem um terreno disponível para um novo parque industrial, que tal preparar e atrair novas indústrias?|0|0|4|8
+3|Saúde é o que interessa|As filas das unidades de saúde próximas estão aumentando, construir um novo posto pode ajudar.|4|0|0|8
+4|Creche nos bairros|Uma creche pode auxiliar muitas mães a trabalharem mais tranquilas, que tal uma nova creche?|0|3|1|8
+5|Reparos urgentes|Uma forte chuva derrubou o telhado de uma das escolas e precisamos consertar o quanto antes.|0|4|0|8
+6|Mais leitos|A população pode se beneficiar com mais leitos em algumas unidades. |4|0|0|8
+7|Incentivo local|Um dos setores locais de serviços está pedindo isensção temporária de impostos para poderem aproveitar o momento e crescer ainda mais.|0|0|4|8
+8|Prevenção de acidentes|Usar os instrumentos de proteção pode melhorar o ambiente de trabalho, uma campanha sobre este assunto cai bem|3|0|1|8
+9|Feiras Locais|Uma  nova portaria sobre as feiras locais pode evitar o acúmulo de lixo após as feiras e ainda aumentar as vagas, o que acha?|1|0|3|8
+10|Educação nos postos|Para as crianças que estão acamadas, vamos dedicar um professor para auxiliar na lição de casa e ocupar a mente ainda auxilia na recuperação da saúde.|1|3|0|8
+11|Capacitação inicial|Vamos pegar uma pequena parcela da população no comércio sem o ensino fundamental e dar um curso noturno. Isto pode melhorar a qualidade de vida delas.|0|1|3|8
+12|Merenda|Vamos melhorar alguns itens da merenda das escolas primárias. Com mais saúde as crianças aprendem mais.|2|2|0|8
+13|Curso noturno|Alguns setores estão pedindo auxilio para capacitar mais pessoal com cursos noturnos de nível técnico.|0|2|2|8
+14|Higiene e resfriados|Uma campanha de uso de máscaras durante os resfriados e lavar as mãos pode reduzir a contaminação nos ambientes de trabalho e melhorar a eficiência geral.|2|0|2|8
+15|Uma escola por uma fábrica|Uma área pouco populosa pode receber uma fabrica, mas temos que tirar uma escola do local. |0|-5|5|10
+16|Hospital em risco|Um hospital está em risco e tem que ser demolido, mas uma das alas pode ser convertida em uma creche|-4|2|0|4
+17|Zona residencial|Algumas fábricas estão em uma área predominantemente residencial. Retirar estas fábricas significa uma melhoria na saúde local.|2|0|-4|4
+18|Hora extra|Podemos aprovar uma lei que permita 1 hora extra por dia para o funcinalismo. Melhoraria a renda, mas saúde e educação podem ser prejudicadas|-1|-1|2|4
+19|Zona de risco|Um centro comunitário deve ser movido por questões de segurança|-3|-2|1|2
+20|Uma melhoria bem vinda|Temos condições de criar um novo colégio em um dos nossos bairros que atenderá muitas crianças.|0|5|1|12
+21|Unidade de pronto atendimento|Um novo hospital de emergências para um bairro carente, nada mais urgente que isto.|5|0|0|10
+22|Zona de comércio|Com uma pequena ajuda, um de nossos bairros pode receber uma nova área comercial, o que melhorará a vida como um todo.|0|0|5|10
