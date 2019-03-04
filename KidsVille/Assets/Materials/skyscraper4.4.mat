@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: skyscraper4.4
   m_Shader: {fileID: 4800000, guid: 5e1c1672bcd3080479803442a1461590, type: 3}
-  m_ShaderKeywords: RECEIVESHADOWS_ON TURNONOUTLINE_ON _EMISSION
+  m_ShaderKeywords: RECEIVESHADOWS_ON _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -75,7 +75,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Outline: 1.5
+    - _Outline: 2
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

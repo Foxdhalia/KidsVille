@@ -13,7 +13,7 @@
 		[MaterialToggle] TurnOnOutline("Turn On Outline", Float) = 1
 		_OutlineTex("Outline Texture", 2D) = "white" {}
 		_OutlineColor("Outline Color", Color) = (0.96,0.54,0,1)
-		_Outline("Outline width", Range(0.0, 2)) = 1.5
+		_Outline("Outline width", Range(0.0, 5)) = 1.5
 		
 		_SrcBlend("Blend Source", Float) = 5
 		_DstBlend("Blend Destination", Float) = 10
@@ -30,8 +30,7 @@
 			struct appdata
 			{
 				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
-				float2 uv1 : TEXCOORD1;
+				float2 uv : TEXCOORD0;				
 				float3 normal : NORMAL;
 			};
 
@@ -46,9 +45,9 @@
 			Name "OUTLINE"
 			Tags {
 				//"LightMode" = "Always" 
-				"Queue" = "Transparent"
-				"IgnoreProjector" = "True"
-				"RenderType" = "Transparent"
+				//"Queue" = "Transparent"
+				//"IgnoreProjector" = "True"
+				"RenderType" = "Opaque"
 			}
 			Cull Off
 				
@@ -60,10 +59,10 @@
 			//ZTest GEqual 
 			//ZTest Equal 
 			//ZTest NotEqual 
-			ZTest Always
+			//ZTest Always
 
 
-			Blend[_SrcBlend][_DstBlend]
+			//Blend[_SrcBlend][_DstBlend]
 			// Tipos clássicos de Blend:
 				//Blend SrcAlpha OneMinusSrcAlpha // Normal Transparency
 				//Blend One One // Additive
@@ -97,37 +96,37 @@
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);				
-
-				float3 norm = mul((float3x3)UNITY_MATRIX_IT_MV, v.normal);
-				float2 offset = TransformViewToProjection(norm.xy); // Original	
+				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+				float3 normal = mul((float3x3) UNITY_MATRIX_MV, v.normal);
+				normal.x *= UNITY_MATRIX_P[0][0];
+				normal.y *= UNITY_MATRIX_P[1][1];
+				//o.vertex.xy += normal.xy * _Outline;
 
 				if (TurnOnOutline) {
-					o.vertex.xy += offset * o.vertex.z * _Outline; // Original
+					o.vertex.xy += normal.xy * _Outline;
 				}
 				else {
 					_Outline = 0;
 				}
 
 				o.color = _OutlineColor;
-
 				return o;
 			}
 			
 			half4 frag(v2f i) : COLOR {
 						
 				//fixed4 col = tex2D(_MainTex, i.uv); // A
-				fixed4 col = (0, 0, 0, 0);
+				//fixed4 col = (0, 0, 0, 0);
 
-				if (TurnOnOutline) {
+				/*if (TurnOnOutline) {
 					fixed4 colorOutline = i.color;
-					float2 uvOutline = i.uv;
+					float2 uvOutline = i.uv;*/
 
 					/*#ifdef MOVEOUTLINECOLOR_ON
 						uvOutline *= _Time.x * _SpeedOutline;
 					#endif*/
 
-					if (MoveOutlineColor){
+					/*if (MoveOutlineColor){
 						uvOutline *= _Time.x * _SpeedOutline;
 					}
 							
@@ -137,9 +136,9 @@
 					col = tex2D(_OutlineTex, uvOutline) * colorOutline;					
 					//col -= MainTexture;
 					
-				}
+				}*/
 				
-				return col;
+				return _OutlineColor;
 			}
 			ENDCG
 		}		
