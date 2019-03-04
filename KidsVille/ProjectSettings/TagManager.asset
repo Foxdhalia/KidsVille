@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Language
+  - Build
   layers:
   - Default
   - TransparentFX

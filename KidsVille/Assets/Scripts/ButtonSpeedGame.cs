@@ -54,7 +54,7 @@ public class ButtonSpeedGame : MonoBehaviour
         }
        
         speedTx.text = gm.GetDaySpeed().ToString() + "x";
-        print("Day speed: " + gm.GetDaySpeed());
+        //print("Day speed: " + gm.GetDaySpeed());
     }
 
 }

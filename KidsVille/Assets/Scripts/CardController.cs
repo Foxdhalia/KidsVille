@@ -204,8 +204,7 @@ public class CardController : MonoBehaviour
 
     // Aplicar Penalidade por NÃO comprar uma carta (Evento e Bonus):
     void Penalty(int n) // 0 ou 1 (carta da esquerda e da direita, respectivamente)
-    {
-        Debug.Log("Entrou penalidade da carta " + n + ".");
+    {        
         if (tempEventCards[n].health > 0)
         {
             player.ChangeIndexValue(0, -tempEventCards[n].health);
@@ -217,8 +216,7 @@ public class CardController : MonoBehaviour
         if (tempEventCards[n].income > 0)
         {
             player.ChangeIndexValue(2, (-tempEventCards[n].income));
-        }
-        Debug.Log("Saiu penalidade da carta " + n + ".");
+        }        
     }
 
 
@@ -250,7 +248,7 @@ public class CardController : MonoBehaviour
             do
             {
                 eventRaflle[1] = UnityEngine.Random.Range(1, allEventsList.Count);
-                Debug.Log(gm.PrintDate() + "Cartas evento sorteadas: " + eventRaflle[0] + " e " + eventRaflle[1] + ".");
+                //Debug.Log(gm.PrintDate() + ". Cartas evento sorteadas: " + eventRaflle[0] + " e " + eventRaflle[1] + ".");
             } while (eventRaflle[1] == eventRaflle[0]);
 
             tempEventCards[1] = allEventsList[eventRaflle[1]];

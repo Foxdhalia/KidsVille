@@ -14,9 +14,6 @@ public class GameManager : MainScript
     public static  bool timePassing; // Para gerenciar se a contagem dos dias está correndo ou não.
     public static bool checkingGoals; // Pausa a contagem do tempo quando uma carta objetivo estiver aberta na tela.
 
-
-    private int month = 1, day = 1, year = 0; // autoexplicativo...    
-
     private float dayTimer; // variavel interna do código para contagem do tempo do dia.
 
     private float eventChance = 5f; // Chance de sair o evento. Pode ser incrementada.
@@ -30,6 +27,11 @@ public class GameManager : MainScript
 
     // Usada para aguardar o momento em que os cálculos mensais são apurados (todo dia 5):
     private bool monthReportDay;
+
+    //Taxas recolhidas dos prédios da cidade:
+    private List<Buildings> buildings = new List<Buildings>();
+    private List<Buildings> buildingsTaxed = new List<Buildings>();
+    private int countDaysTax;
 
     [Header("Duração do jogo (máximo de anos):")]
     [SerializeField] private int maxYears;
@@ -49,6 +51,13 @@ public class GameManager : MainScript
         player = FindObjectOfType<PlayerData>();
         timePassing = true;
         NewYear();
+
+        Buildings[] tempBuild = FindObjectsOfType<Buildings>();
+        foreach(Buildings build in tempBuild)
+        {
+            buildings.Add(build);
+        }
+        Debug.Log("Buildings found: " + buildings.Count);
     }
 
     void Update()
@@ -79,6 +88,7 @@ public class GameManager : MainScript
                             }
                             else
                             {
+                                CheckForNewTaxes();
                                 EventChance();
                             }
                         }
@@ -96,6 +106,39 @@ public class GameManager : MainScript
         }
     }
 
+    private void CheckForNewTaxes()
+    {
+        if (buildings.Count > 0)
+        {
+            if (countDaysTax >= 2)
+            {
+                countDaysTax = 0;
+
+                float taxChance = (float)player.GetPopulation() * 0.1f;
+                taxChance += 50f;
+                if (taxChance >= 100f)
+                {
+                    taxChance = 100f;
+                }
+                float raffle = UnityEngine.Random.Range(0f, 100f);
+                Debug.Log("Número sorteado para taxa = " + raffle + ". Chance da taxa = " + taxChance + "%");
+
+                if (raffle <= taxChance)
+                {
+                    int r = UnityEngine.Random.Range(0, buildings.Count);
+                    Debug.Log("Prédio " + r + " com taxas.");
+                    buildings[r].SetTax(true);
+                    buildings[r].TurnOnOutline(true);
+                    buildingsTaxed.Add(buildings[r]);
+                    buildings.RemoveAt(r);
+                }
+            }
+            else
+            {
+                countDaysTax++;
+            }
+        }
+    }
 
     private bool EventChance() // Controla a chance diaria de sair algum evento.
     {
@@ -213,6 +256,12 @@ public class GameManager : MainScript
         }
     }
 
+    // Buildings List:
+    public void ManageBuildLists(Buildings build)
+    {
+        buildings.Add(build);
+        buildingsTaxed.Remove(build);
+    }
 
     public void SetTimePassing(bool isTimePassing)
     {

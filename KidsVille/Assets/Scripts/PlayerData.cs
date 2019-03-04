@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PlayerData : MainScript
@@ -118,6 +119,27 @@ public class PlayerData : MainScript
                 goldWarning = true;
                 Debug.LogWarning("O valor de gold está menor do que 0!");
             }
+
+            // Clicando sobre os prédios:
+            if (!EventSystem.current.IsPointerOverGameObject()) // The instructions bellow will run only if the mouse is not over a UI object.
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    //print("origin " + mouseRay.origin + ", direction " + mouseRay.direction);
+                    if (Physics.Raycast(mouseRay, out hit))
+                    {
+                        //print(hit.collider.name.ToString());
+                        if (hit.collider.tag == "Build")
+                        {
+                            Buildings build = hit.collider.GetComponent<Buildings>();
+                            build.CollectRates();
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -125,7 +147,7 @@ public class PlayerData : MainScript
     public bool TaxCalculation() // Calculo dos Impostos da cidade (com base na populacao).
     {
         tax = Mathf.CeilToInt(population * 0.1f);
-        Debug.Log("Tax: " + tax);
+        //Debug.Log("Tax: " + tax);
         return true;
     }
 
@@ -181,25 +203,25 @@ public class PlayerData : MainScript
     {
         if (cityIndex < indexlimits[0])
         {
-            print("Entrou no limite 0. " + " cityIndex = " + cityIndex);
+            //print("Entrou no limite 0. " + " cityIndex = " + cityIndex);
             population += popIncrease[0];
             upkeep += upkeepIncrease[0];
         }
         else if (cityIndex >= indexlimits[0] && cityIndex < indexlimits[1])
         {
-            print("Entrou no limite de 0 a 1." + " cityIndex = " + cityIndex);
+            //print("Entrou no limite de 0 a 1." + " cityIndex = " + cityIndex);
             population += popIncrease[1];
             upkeep += upkeepIncrease[1];
         }
         else if (cityIndex >= indexlimits[1] && cityIndex < indexlimits[2])
         {
-            print("Entrou no limite de 1 a 2." + " cityIndex = " + cityIndex);
+           // print("Entrou no limite de 1 a 2." + " cityIndex = " + cityIndex);
             population += popIncrease[2];
             upkeep += upkeepIncrease[2];
         }
         else if (cityIndex >= indexlimits[2])
         {
-            print("Entrou no limite acima de 2." + " cityIndex = " + cityIndex);
+            //print("Entrou no limite acima de 2." + " cityIndex = " + cityIndex);
             population += popIncrease[3];
             upkeep += upkeepIncrease[3];
         }
@@ -249,13 +271,13 @@ public class PlayerData : MainScript
         // Calcula os indices para verificar o incremento da população e o novo valor do upkeep:
         for (int i = 0; i < uiIndexes.Length; i++)
         {
-            Debug.Log(i + " -> Population Before: " + population + ", Upkeep Before: " + upkeep);
+            //Debug.Log(i + " -> Population Before: " + population + ", Upkeep Before: " + upkeep);
             bool b_ = false;
             float n = uiIndexes[i].value;
             b_ = LimitsRange(n / indexesMaxValue);
-            Debug.Log("Index " + i + " value on limits range " + (n / indexesMaxValue));
+            //Debug.Log("Index " + i + " value on limits range " + (n / indexesMaxValue));
             yield return new WaitUntil(() => b_ == true);
-            Debug.Log("Population Now: " + population + ", Upkeep Now: " + upkeep);
+           // Debug.Log("Population Now: " + population + ", Upkeep Now: " + upkeep);
         }
         Debug.Log("TOTAL Population Now: " + population + ", Upkeep Now: " + upkeep);
 
@@ -328,6 +350,10 @@ public class PlayerData : MainScript
         populationIncrement.text = (population - originalPop).ToString();
         finalGold.text = gold.ToString();
         hdiTx.text = hdi.ToString();
+    }
 
+    public int GetPopulation()
+    {
+        return population;
     }
 }
