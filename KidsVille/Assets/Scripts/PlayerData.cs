@@ -14,10 +14,18 @@ public class PlayerData : MainScript
 
     private float[] indexes = new float[3]; // 0 = healthIndex, 1 = educationIndex, 2 = incomeIndex"
 
+    // Variáveis para o Relatório Final:
     [HideInInspector] public float lfi;  // Índice de expectativa de vida. De 20 a 85 anos (0% a 100% da barra de saúde, respectivamente).    
     private float edi;
     private float inci;
     private float hdi; // valor do índice de desenvolvimento Humano. Calculado ao final dos 48 meses.
+    private int goalsAchieved;
+    private int solvedCrises;
+
+    //Touch
+    Vector2 posInit;
+    Vector2 pos_;
+    int fingerIndex = -1;
 
     [Header("Valor máximo que cada uma das barras índice pode alcançar.")]
     [SerializeField] private int indexesMaxValue = 200;
@@ -49,6 +57,7 @@ public class PlayerData : MainScript
     [Header("UI -> Index Sliders: health, education, income")]
     [Tooltip("0 = healthIndex, 1 = educationIndex, 2 = incomeIndex")]
     public Slider[] uiIndexes;
+    public Image[] slidersGlow;
 
     [Header("UI -> Relatório Mensal:")]
     [Tooltip("Month Report UI Data")]
@@ -71,11 +80,18 @@ public class PlayerData : MainScript
     [Header("UI -> Relatório FINAL DE JOGO:")]
     public GameObject finalReportPanel;
     public Text goalsAchievedTx;
-    public Text crisesSolved;
+    public Text crisesSolvedTx;
     public Text populationIncrement;
     public Text finalGold;
     public Text hdiTx;
+    public Text hdiTx_extensive;
 
+
+    [HideInInspector] public AudioSource audio;
+    [Header("Sound Clips")]
+    [SerializeField] private AudioClip displayPanel;
+    public AudioClip getRates;
+    public AudioClip finalBtSound;
 
     private void Start()
     {
@@ -94,9 +110,11 @@ public class PlayerData : MainScript
         {
             indexes[i] = indexesMaxValue * Random.Range(valuesIndexStart[0], valuesIndexStart[1]); // Padrão 0.15 a 0.3.
             uiIndexes[i].value = Mathf.CeilToInt(indexes[i]);
+
+            ChangeIndexBarGlow(i);
         }
 
-
+        audio = GetComponent<AudioSource>();
     }
 
 
@@ -120,6 +138,7 @@ public class PlayerData : MainScript
                 Debug.LogWarning("O valor de gold está menor do que 0!");
             }
 
+
             // Clicando sobre os prédios:
             if (!EventSystem.current.IsPointerOverGameObject()) // The instructions bellow will run only if the mouse is not over a UI object.
             {
@@ -139,10 +158,65 @@ public class PlayerData : MainScript
                     }
                 }
             }
+            //#if UNITY_ANDROID
+            // Touch sobre os prédios.
+            if (Input.touchCount > 0)
+            {
+                if (!EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
+                {
+                    /*Touch t = Input.GetTouch(0);
+                    fingerIndex = t.fingerId;
+                    if (t.phase == TouchPhase.Began)
+                    {
+                        //posInit = Input.GetTouch(0).position;                
+                        //print("Finger index: " + fingerIndex);
+                        posInit = Input.GetTouch(fingerIndex).position;
+                    }
 
+                    if (t.phase == TouchPhase.Moved)
+                    {
+                        StartCoroutine(ReadGesture());
+                    }
+
+                    if (t.phase == TouchPhase.Ended)
+                    {
+                        StopAllCoroutines();
+                    }*/
+
+                }
+
+            }
+            //#endif
         }
     }
 
+
+    IEnumerator ReadGesture()
+    {
+        yield return new WaitForSeconds(0.05f);
+        pos_ = Input.GetTouch(fingerIndex).position;
+        if (posInit.x < pos_.x)
+        {
+            print("Going to RIGHT!");
+           
+        }
+        else if (posInit.x > pos_.x)
+        {
+            print("Going to LEFT!");
+            
+        }
+
+        if (posInit.y < pos_.y)
+        {
+            print("Going to UP!");
+
+        }
+        else if (posInit.y > pos_.y)
+        {
+            print("Going to DOWN!");
+
+        }
+    }
 
     public bool TaxCalculation() // Calculo dos Impostos da cidade (com base na populacao).
     {
@@ -170,13 +244,13 @@ public class PlayerData : MainScript
         // Média de educação.
         float edAvg = Mathf.Lerp(5, 15, percentualBar);
         Debug.Log("edAVG = " + edAvg);
-        
+
         // Expectativa de educação.
         float edExp = Mathf.Lerp(2, 18, percentualBar);
         Debug.Log("edExp = " + edExp);
 
         edi = ((edAvg / 15) + (edExp / 18f)) / 2f;
-        Debug.LogWarning("EDI = (" + edAvg + " / 15) + (" + edExp + " / 18) / 2 => " + edi);
+        Debug.LogWarning("EDI = ((" + edAvg + " / 15) + (" + edExp + " / 18)) / 2 => " + edi);
 
         return true;
     }
@@ -190,11 +264,13 @@ public class PlayerData : MainScript
 
     public bool Hdi_Calculation()
     {
-        //hdi = Mathf.Pow((lfi * edi * inci), 1 / 3);
-        hdi = Mathf.Pow(0.5f, 1f / 3f);
-       
-        Debug.Log("(1a parte) HDI = " + lfi + " * " + edi + " * " + inci + " => " + (lfi * edi * inci));
-        Debug.LogWarning("(2a parte) HDI = 1a parte na potencia 1/3  => " + hdi);
+        hdi = Mathf.Pow((lfi * edi * inci), 1f / 3f);
+        //Debug.Log("Hdi completo:" + hdi);
+        hdi = (float)decimal.Round((decimal)hdi, 2);
+        // Debug.Log("Hdi com duas casas: " + hdi);
+        hdi *= 100f;
+        Debug.Log("Hdi percentual: " + hdi);
+
         // HDI = (LFI x EDI x II) ^ (1/3)
         return true;
     }
@@ -215,7 +291,7 @@ public class PlayerData : MainScript
         }
         else if (cityIndex >= indexlimits[1] && cityIndex < indexlimits[2])
         {
-           // print("Entrou no limite de 1 a 2." + " cityIndex = " + cityIndex);
+            // print("Entrou no limite de 1 a 2." + " cityIndex = " + cityIndex);
             population += popIncrease[2];
             upkeep += upkeepIncrease[2];
         }
@@ -241,7 +317,36 @@ public class PlayerData : MainScript
             indexes[n] = 0f;
         }
         uiIndexes[n].value = Mathf.CeilToInt(indexes[n]);
-        //print("Index " + n + " with " + temp + ". Value: " + value + ". Total: " + indexes[n]);
+        //print("Index " + n + " with " + temp + ". Value: " + value + ". Total: " + indexes[n]);      
+
+        ChangeIndexBarGlow(n);
+    }
+
+    // Mudando a cor do glow:
+    void ChangeIndexBarGlow(int n)
+    {
+        float f = indexes[n] / indexesMaxValue;
+        // print("float f = " + f);
+        if (f < indexlimits[0])
+        {
+            slidersGlow[n].color = Color.red;
+            // print("0, float f = " + f + " < " + indexlimits[0]);
+        }
+        else if (f >= indexlimits[0] && f < indexlimits[1])
+        {
+            slidersGlow[n].color = Color.yellow;
+            // print("1, float f = " + indexlimits[0] + " <= " + f + " < " + indexlimits[1]);
+        }
+        else if (f >= indexlimits[1] && f < indexlimits[2])
+        {
+            slidersGlow[n].color = Color.cyan;
+            //  print("2, float f = " + indexlimits[1] + " <= " + f + " < " + indexlimits[2]);
+        }
+        else if (f >= indexlimits[2])
+        {
+            slidersGlow[n].color = Color.green;
+            //  print("3, float f = " + f + " >= " + indexlimits[2]);
+        }
     }
 
     public bool GoldCalc(float value)
@@ -277,7 +382,7 @@ public class PlayerData : MainScript
             b_ = LimitsRange(n / indexesMaxValue);
             //Debug.Log("Index " + i + " value on limits range " + (n / indexesMaxValue));
             yield return new WaitUntil(() => b_ == true);
-           // Debug.Log("Population Now: " + population + ", Upkeep Now: " + upkeep);
+            // Debug.Log("Population Now: " + population + ", Upkeep Now: " + upkeep);
         }
         Debug.Log("TOTAL Population Now: " + population + ", Upkeep Now: " + upkeep);
 
@@ -294,7 +399,7 @@ public class PlayerData : MainScript
 
         uiPopulation.text = population.ToString();
 
-        if(population <= 0)
+        if (population <= 0)
         {
             finishGame = true;
         }
@@ -311,6 +416,7 @@ public class PlayerData : MainScript
 
     void MonthReport_UIData(int previousGold, int previousPop)
     {
+        audio.PlayOneShot(displayPanel);
         monthReportPanel.SetActive(true);
 
         previousGoldTx.text = previousGold.ToString();
@@ -344,16 +450,53 @@ public class PlayerData : MainScript
     public void FinalReport_UIData()
     {
         finalReportPanel.SetActive(true);
+        audio.PlayOneShot(displayPanel);
 
-        //goalsAchievedTx.text = ...;
-        //crisesSolved.text = ...;
+        goalsAchievedTx.text = goalsAchieved.ToString();
+        crisesSolvedTx.text = solvedCrises.ToString();
         populationIncrement.text = (population - originalPop).ToString();
         finalGold.text = gold.ToString();
-        hdiTx.text = hdi.ToString();
+
+        hdiTx.text = hdi.ToString() + "%";
+        if (hdi < 30)
+        {
+            hdiTx.color = Color.red;
+            hdiTx_extensive.color = Color.red;
+        }
+        else if (hdi >= 30 && hdi < 50)
+        {
+            hdiTx.color = new Color(1f, 0.51f, 0f, 1f); // Orange
+            hdiTx_extensive.color = new Color(1f, 0.51f, 0f, 1f); // Orange
+        }
+        else if (hdi >= 50 && hdi < 80)
+        {
+            hdiTx.color = new Color(0f, 0.67f, 1f, 1f); // Azul claro
+            hdiTx_extensive.color = new Color(0f, 0.67f, 1f, 1f); // Azul claro
+        }
+        else
+        {
+            hdiTx.color = Color.green;
+            hdiTx_extensive.color = Color.green;
+        }
     }
 
     public int GetPopulation()
     {
         return population;
+    }
+
+    public void SetGoalsAchieved()
+    {
+        goalsAchieved++;
+    }
+
+    public void SetSolvedCrises()
+    {
+        solvedCrises++;
+    }
+
+    public void PlayFinalBtSound()
+    {
+        audio.PlayOneShot(finalBtSound);
     }
 }

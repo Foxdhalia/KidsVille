@@ -6,6 +6,7 @@ public class Buildings : MonoBehaviour
 {
     public int taxGold;
     [SerializeField] private bool isTax;
+    [SerializeField] private GameObject goldImg;
     private Material material;
     private bool outlineEnable;
     private bool moveOutline;
@@ -19,12 +20,29 @@ public class Buildings : MonoBehaviour
         player = FindObjectOfType<PlayerData>();
         gm = FindObjectOfType<GameManager>();
 
+        taxGold = gm.GetTaxValue();
+
         if (isTax)
         {
-            TurnOnOutline(true);
+            Blink(true);
         }
     }
 
+
+    // Enable and Disable the outline.
+    public void Blink(bool b)
+    {
+        float turnOn = 0;
+        if (b)
+        {
+            player.audio.PlayOneShot(player.getRates);
+            turnOn = 1;
+            goldImg.SetActive(true);
+            //print("Turn on outline.");
+        }
+
+        material.SetFloat("RampActive", turnOn);
+    }
 
     // Enable and Disable the outline.
     public void TurnOnOutline(bool b)
@@ -33,7 +51,8 @@ public class Buildings : MonoBehaviour
         if (b)
         {
             turnOn = 1;
-            print("Turn on outline.");
+            goldImg.SetActive(true);
+            //print("Turn on outline.");
         }
         
         material.SetFloat("TurnOnOutline", turnOn);
@@ -52,8 +71,12 @@ public class Buildings : MonoBehaviour
     {
         if (isTax)
         {
+            isTax = false;
+            //player.audio.PlayOneShot(player.getRates);
             player.GoldCalc(taxGold);
-            TurnOnOutline(false);
+            //TurnOnOutline(false);
+            Blink(false);
+            goldImg.SetActive(false);
             gm.ManageBuildLists(this);
         }
     }

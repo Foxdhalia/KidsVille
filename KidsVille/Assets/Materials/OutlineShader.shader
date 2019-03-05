@@ -1,6 +1,5 @@
 ﻿Shader "Custom/OutlineShader"
 {
-	
 	Properties
     {
         _Color ("Base Color", Color) = (1,0.08,0.9,1)

@@ -8,6 +8,7 @@ public class CardController : MonoBehaviour
 {
     private GameManager gm;
     private PlayerData player;
+    private AudioSource audio;
 
     // ELEMENTOS DE CARTAS:
     private List<CardEvent> allEventsList = new List<CardEvent>(); // Todas as cartas de eventos do jogo.
@@ -48,7 +49,9 @@ public class CardController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI[] incomeEvent = new TextMeshProUGUI[2];
     [SerializeField] private TextMeshProUGUI[] costEvent = new TextMeshProUGUI[2];
     [SerializeField] private GameObject[] buyEvent_BoxBt = new GameObject[2];
+    [SerializeField] private GameObject buyNothing; // Container de botão para quando o jogador não tem ouro para os eventos sorteados.
     private Button[] buyEvent_Bt = new Button[2];
+    
 
     [Header("UI -> Cartas de Promessas.")]
     [SerializeField] private GameObject goalCard_MainPanel;
@@ -75,6 +78,13 @@ public class CardController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI educationBonus;
     [SerializeField] private TextMeshProUGUI incomeBonus;
     [SerializeField] private TextMeshProUGUI costBonus;
+
+    [Header("Sound Clips")]
+    [SerializeField] private AudioClip selectCard;
+    [SerializeField] private AudioClip newEvent;
+    [SerializeField] private AudioClip basicClick;
+    [SerializeField] private AudioClip failSound;
+    
 
     void Start()
     {
@@ -108,6 +118,8 @@ public class CardController : MonoBehaviour
                     longGoalsList.Add(c);
                     break;
             }
+
+            audio = GetComponent<AudioSource>();
         }
 
         // Acessa os arquivos *.csv na pasta Resources para extrair as informacoes em cartas de Evento.
@@ -182,40 +194,49 @@ public class CardController : MonoBehaviour
             longGoalsList.RemoveAt(listIndex);
     }
 
-    // Aplicando Penalidade por NÃO comprar NENHUMA carta (Evento):
-    public void Penalty() // 0 ou 1 (carta da esquerda e da direita, respectivamente)
+    // Aplicando Penalidade por NÃO comprar NENHUMA carta (Evento). penalty_NoGold = 0.5f.
+    public void Penalty()
     {
+        audio.PlayOneShot(failSound);
+        float penalty = 1;
         for (int n = 0; n < 2; n++)
         {
             if (tempEventCards[n].health > 0)
             {
-                player.ChangeIndexValue(0, -tempEventCards[n].health);
+                penalty = -1 * (tempEventCards[n].health * penalty_NoGold);
+                player.ChangeIndexValue(0, penalty);
             }
             if (tempEventCards[n].education > 0)
             {
-                player.ChangeIndexValue(1, -tempEventCards[n].education);
+                penalty = -1 * (tempEventCards[n].education * penalty_NoGold);
+                player.ChangeIndexValue(1, penalty);
             }
             if (tempEventCards[n].income > 0)
             {
-                player.ChangeIndexValue(2, (-tempEventCards[n].income));
+                penalty = -1 * (tempEventCards[n].income * penalty_NoGold);
+                player.ChangeIndexValue(2, penalty);
             }
         }
     }
 
-    // Aplicar Penalidade por NÃO comprar uma carta (Evento e Bonus):
+    // Aplicar Penalidade por NÃO comprar uma carta (Evento). Penalty for Pass = 0.75f.
     void Penalty(int n) // 0 ou 1 (carta da esquerda e da direita, respectivamente)
-    {        
+    {
+        float penalty = 1;
         if (tempEventCards[n].health > 0)
         {
-            player.ChangeIndexValue(0, -tempEventCards[n].health);
+            penalty = -1 * (tempEventCards[n].health * penalty_ForPass);
+            player.ChangeIndexValue(0, penalty);
         }
         if (tempEventCards[n].education > 0)
         {
-            player.ChangeIndexValue(1, -tempEventCards[n].education);
+            penalty = -1 * (tempEventCards[n].education * penalty_ForPass);
+            player.ChangeIndexValue(1, penalty);
         }
         if (tempEventCards[n].income > 0)
         {
-            player.ChangeIndexValue(2, (-tempEventCards[n].income));
+            penalty = -1 * (tempEventCards[n].income * penalty_ForPass);
+            player.ChangeIndexValue(2, penalty);
         }        
     }
 
@@ -227,9 +248,9 @@ public class CardController : MonoBehaviour
     {
         gm.SetTimePassing(false);
 
-        if (allEventsList.Count <= 5)
+        if (allEventsList.Count <= 5) // Repõe o braralho das cartas de evento.
         {
-            Debug.LogWarning("Backup: " + backupEventsList.Count);
+            //Debug.LogWarning("Backup: " + backupEventsList.Count);
             allEventsList.Clear();
             foreach (CardEvent c in backupEventsList)
             {
@@ -255,7 +276,14 @@ public class CardController : MonoBehaviour
 
 
             //Ativa o painel onde as cartas de evento aparecem e o preenche com os dados contidos nelas.
+            audio.PlayOneShot(newEvent);
             eventCardsPanel.SetActive(true);
+            if (goalCard_MainPanel.activeSelf)
+            {
+                goalCard_MainPanel.SetActive(false);
+            }
+
+            int expensiveEvent = 0;
             for (int i = 0; i < 2; i++)
             {
                 tittleEvent[i].text = tempEventCards[i].tittle;
@@ -278,20 +306,33 @@ public class CardController : MonoBehaviour
 
                     costEvent[i].alpha = 1f;
                 }
-                else if (player.gold < tempEventCards[i].cost && buyEvent_Bt[i].interactable)// Desativa o botão para comprar a carta caso o jogador não tenha ouro suficiente. 
+                else if (player.gold < tempEventCards[i].cost)// Desativa o botão para comprar a carta caso o jogador não tenha ouro suficiente. 
                 {
-                    buyEvent_Bt[i].interactable = false;
-                    buyEvent_Bt[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().alpha = 0.6f;
+                    expensiveEvent++;
+                    if (buyEvent_Bt[i].interactable)
+                    {
+                        buyEvent_Bt[i].interactable = false;
+                        buyEvent_Bt[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().alpha = 0.6f;
 
-                    Color c = Color.white;
-                    c = new Color(c.r, c.g, c.b, 0.6f);
-                    buyEvent_Bt[i].GetComponent<Image>().color = c;
+                        Color c = Color.white;
+                        c = new Color(c.r, c.g, c.b, 0.6f);
+                        buyEvent_Bt[i].GetComponent<Image>().color = c;
 
-                    buyEvent_BoxBt[i].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().color = c;
-                    buyEvent_BoxBt[i].transform.GetChild(1).GetComponent<Image>().color = c;
+                        buyEvent_BoxBt[i].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().color = c;
+                        buyEvent_BoxBt[i].transform.GetChild(1).GetComponent<Image>().color = c;
 
-                    costEvent[i].alpha = 0.6f;
+                        costEvent[i].alpha = 0.6f;
+                    }
                 }
+            }
+
+            if(expensiveEvent >= 2) // Se os 2 eventos são caros demais para o jogador, o botão de não comprar nada aparece.
+            {
+                buyNothing.SetActive(true);
+            }
+            else
+            {
+                buyNothing.SetActive(false);
             }
         }
         else
@@ -304,6 +345,8 @@ public class CardController : MonoBehaviour
 
     public void ApplyCardEvent(int n) // 0 ou 1 (carta da esquerda e da direita, respectivamente)
     {
+        audio.PlayOneShot(selectCard);
+
         if (tempEventCards[n].health != 0)
         {
             player.ChangeIndexValue(0, tempEventCards[n].health);
@@ -361,6 +404,8 @@ public class CardController : MonoBehaviour
 
     public void ApplyCardBonus()
     {
+        audio.PlayOneShot(selectCard);
+
         if (tempBonusCard.health != 0)
         {
             player.ChangeIndexValue(0, tempBonusCard.health);
@@ -630,6 +675,8 @@ public class CardController : MonoBehaviour
         // Verifica se o jogador pode comprar a carta.
         if (activeGoalCards[displayedGoal].cost <= player.gold)
         {
+            audio.PlayOneShot(selectCard);
+
             if (activeGoalCards[displayedGoal].health != 0)
             {
                 player.ChangeIndexValue(0, activeGoalCards[displayedGoal].health);
@@ -662,11 +709,13 @@ public class CardController : MonoBehaviour
             print("Cartas ativas antes da compra: " + activeGoalCards.Count + ", Cartas da pilha: " + allGoalsList.Count);
             if (activeGoalCards.Count < 10 && player.gold >= newGoalCardPrice)
             {
+                audio.PlayOneShot(selectCard);
                 int rdm = Random.Range(0, allGoalsList.Count);
                 activeGoalCards.Add(allGoalsList[rdm]);
                 allGoalsList.RemoveAt(rdm);
                 DisplayGoalCardsHand(1); // Adiciona a carta comprada na UI.
                 player.GoldCalc(-newGoalCardPrice);
+                print("Preço Nova promessa: " + newGoalCardPrice);
 
                 if (allGoalsList.Count <= 0)
                 {
@@ -675,12 +724,14 @@ public class CardController : MonoBehaviour
             }
             else if (activeGoalCards.Count >= 10)
             {
+                audio.PlayOneShot(failSound);
                 warningPanel.SetActive(true);
                 warningPanel.transform.GetChild(1).GetComponent<Text>().text = "Você já tem o máximo de promessas permitidas!";
             }
         }
         else if (player.gold < newGoalCardPrice && allGoalsList.Count > 0)
         {
+            audio.PlayOneShot(failSound);
             warningPanel.SetActive(true);
             warningPanel.transform.GetChild(1).GetComponent<Text>().text = "Você não tem recursos suficientes para compra!";
         }
@@ -692,6 +743,11 @@ public class CardController : MonoBehaviour
             buyNewGoalButton.gameObject.SetActive(false);
             buyNewGoalButton.transform.parent.transform.parent.transform.parent.transform.GetChild(0).GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.6f);
         }
+    }
+
+    public void PlayBasicClick()
+    {
+        audio.PlayOneShot(basicClick);
     }
 }
 

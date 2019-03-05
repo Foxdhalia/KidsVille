@@ -16,7 +16,7 @@ public class GameManager : MainScript
 
     private float dayTimer; // variavel interna do código para contagem do tempo do dia.
 
-    private float eventChance = 5f; // Chance de sair o evento. Pode ser incrementada.
+    private float eventChance; // Chance de sair o evento. Pode ser incrementada.
     private int countDays; // Contagem de dias para gerenciar o incremento da chance de sair o evento.
 
     // Usada para aguardar o momento em que aparecem 2 eventos para o jogador escolher:
@@ -32,13 +32,26 @@ public class GameManager : MainScript
     private List<Buildings> buildings = new List<Buildings>();
     private List<Buildings> buildingsTaxed = new List<Buildings>();
     private int countDaysTax;
+    
 
     [Header("Duração do jogo (máximo de anos):")]
-    [SerializeField] private int maxYears;
+    [SerializeField] private int maxYears = 4;
 
     [Header("Duração de cada dia:")]
     [SerializeField] private float daySpeed; // Permite acelerar ou diminuir a passagem do tempo.
     [SerializeField] private float dayDuration; // É a duracao maxima do dia.
+
+    [Header("Variáveis para os Eventos.")]
+    [SerializeField] private int eventChanceStart = 0;
+    [SerializeField] private int daysToIncrement_eventChance = 5;
+
+    [Header("Variáveis para taxas dos prédios.")]
+    [Tooltip("Valor da taxa dos prédios")]
+    [SerializeField] private int taxValue = 10;
+    [Tooltip("Dias para incremento da taxa dos prédios")]
+    [SerializeField] private int daysToIncrement_buildsTax = 5;    
+    [Tooltip("Chance inicial para a taxa dos prédios (em %)")]
+    [SerializeField] private float taxChanceStart = 30f; // porcentagem
 
     // ELEMENTOS DE UI:
     [Header("UI - > Calendário: Ano, Mês, Dia.")]
@@ -47,6 +60,7 @@ public class GameManager : MainScript
 
     void Start()
     {
+        eventChance = eventChanceStart;
         cardController = GetComponent<CardController>();
         player = FindObjectOfType<PlayerData>();
         timePassing = true;
@@ -110,12 +124,13 @@ public class GameManager : MainScript
     {
         if (buildings.Count > 0)
         {
-            if (countDaysTax >= 2)
+            if (countDaysTax >= daysToIncrement_buildsTax)
             {
+                Debug.Log("Dia de verificar se há taxa." + day + " / " + month + " / " + year);
                 countDaysTax = 0;
 
                 float taxChance = (float)player.GetPopulation() * 0.1f;
-                taxChance += 50f;
+                taxChance += taxChanceStart;
                 if (taxChance >= 100f)
                 {
                     taxChance = 100f;
@@ -128,7 +143,8 @@ public class GameManager : MainScript
                     int r = UnityEngine.Random.Range(0, buildings.Count);
                     Debug.Log("Prédio " + r + " com taxas.");
                     buildings[r].SetTax(true);
-                    buildings[r].TurnOnOutline(true);
+                    //buildings[r].TurnOnOutline(true);
+                    buildings[r].Blink(true);
                     buildingsTaxed.Add(buildings[r]);
                     buildings.RemoveAt(r);
                 }
@@ -142,6 +158,11 @@ public class GameManager : MainScript
 
     private bool EventChance() // Controla a chance diaria de sair algum evento.
     {
+        if(day < 5 && month == 1 && year == 1) // Para o evento não sair log de cara.
+        {
+            return true;
+        }
+
         timePassing = false;
 
         float raffle = UnityEngine.Random.Range(1f, 100f);
@@ -151,10 +172,10 @@ public class GameManager : MainScript
         {
             eventDay = true;
             cardController.ChoosingEventCards();
-            eventChance = 5f;
+            eventChance = eventChanceStart; // 0
             countDays = 0;
         }
-        else if (countDays >= 3)
+        else if (countDays >= daysToIncrement_eventChance) // daysToIncrement_eventChance = 5
         {
             eventDay = false;
             eventChance++;
@@ -162,13 +183,13 @@ public class GameManager : MainScript
            // print("Chance de sair o evento incrementada para: " + eventChance + "% .");
             timePassing = true;
         }
-        else if (countDays < 3)
+        else if (countDays < daysToIncrement_eventChance) // daysToIncrement_eventChance = 5
         {
             eventDay = false;
             countDays++;
             timePassing = true;
         }
-        //newDayStart = true;
+        
         return true;
     }
 
@@ -199,9 +220,10 @@ public class GameManager : MainScript
         {
             bonusDay = 0;
         }
+        timePassing = true;
 
         // Sortendo a possibilidade de evento no dia 30/12.
-        bool b = false;
+        /*bool b = false;
         b = EventChance();
         yield return new WaitUntil(() => b == true);
         if (eventDay)
@@ -212,7 +234,7 @@ public class GameManager : MainScript
         else
         {
             timePassing = true;
-        }
+        }*/
     }
 
     private void NewYear()
@@ -263,6 +285,7 @@ public class GameManager : MainScript
         buildingsTaxed.Remove(build);
     }
 
+    // GETTERS AND SETTERS
     public void SetTimePassing(bool isTimePassing)
     {
         timePassing = isTimePassing;
@@ -288,10 +311,6 @@ public class GameManager : MainScript
         daySpeed *= multiplier;
     }
 
-    public void ReturnToMainMenu()
-    {
-        SceneManager.LoadScene("MenuScene");
-    }
 
     public void SetEventDay(bool b)
     {
@@ -302,5 +321,25 @@ public class GameManager : MainScript
     {
         string s = day + "/ " + month + "/ ano " + year;
         return s;
+    }
+
+    public int GetTaxValue()
+    {
+        return taxValue;
+    }
+
+
+    // Volta para o menu inicial:
+    public void ReturnToMainMenu()
+    {
+        player.PlayFinalBtSound();
+        SceneManager.LoadScene("MenuScene");
+        //StartCoroutine(ReturnMenu());
+    }
+    IEnumerator ReturnMenu()
+    {
+        player.PlayFinalBtSound();
+        yield return new WaitForSeconds(player.finalBtSound.length);
+        SceneManager.LoadScene("MenuScene");
     }
 }
