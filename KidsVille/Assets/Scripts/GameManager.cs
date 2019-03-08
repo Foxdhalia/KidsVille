@@ -11,7 +11,7 @@ public class GameManager : MainScript
     private PlayerData player;
 
     public static  bool continueGame; // Para no futuro gerenciar se o jogador já entrou ou não no jogo antes.
-    public static  bool timePassing; // Para gerenciar se a contagem dos dias está correndo ou não.
+    //public static  bool timePassing; // Para gerenciar se a contagem dos dias está correndo ou não.
     public static bool checkingGoals; // Pausa a contagem do tempo quando uma carta objetivo estiver aberta na tela.
 
     private float dayTimer; // variavel interna do código para contagem do tempo do dia.
@@ -63,7 +63,7 @@ public class GameManager : MainScript
         eventChance = eventChanceStart;
         cardController = GetComponent<CardController>();
         player = FindObjectOfType<PlayerData>();
-        timePassing = true;
+        //timePassing = true;
         NewYear();
 
         Buildings[] tempBuild = FindObjectsOfType<Buildings>();
@@ -286,11 +286,6 @@ public class GameManager : MainScript
     }
 
     // GETTERS AND SETTERS
-    public void SetTimePassing(bool isTimePassing)
-    {
-        timePassing = isTimePassing;
-    }
-
     public void SetCheckingGoals(bool areCheckingGoals)
     {
         checkingGoals = areCheckingGoals;
