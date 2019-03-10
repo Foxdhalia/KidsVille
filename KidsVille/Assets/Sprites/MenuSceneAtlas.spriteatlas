@@ -31,7 +31,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 7a0cdf74fc63ccd48a8861c968988f5b, type: 3}
-    totalSpriteSurfaceArea: 1553663
+    totalSpriteSurfaceArea: 1998763
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -40,11 +40,13 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c46afad6b1ae24f40a88205cb7b838a7, type: 3}
   - {fileID: 21300000, guid: dd654d499414d144c9af0e8de388c6b3, type: 3}
   - {fileID: 21300000, guid: 2327ea2f5cc62fb439a59bbdd221b05e, type: 3}
+  - {fileID: 21300000, guid: dbf6374f8ac6df44c8494b32db653be5, type: 3}
   m_PackedSpriteNamesToIndex:
   - LoadingBarBase
   - LoadingTexto
   - LoadingBarFill
   - base
   - LoadingBarLimite
+  - LoadingTextoEN
   m_Tag: MenuSceneAtlas
   m_IsVariant: 0

@@ -1,0 +1,29 @@
+﻿{
+	"items":
+	[
+		{"ptKey":"Jogar","translation":"Play"},
+		{"ptKey":"Comprar","translation":"Buy"},
+		{"ptKey":"Sair sem comprar.","translation":"Don't buy anything."},
+		{"ptKey":"Ano","translation":"Year"},
+		{"ptKey":"Mes","translation":"Month"},
+		{"ptKey":"Dia","translation":"Day"},
+		{"ptKey":"Promessas","translation":"Goals"},
+		{"ptKey":"Bônus","translation":"Bonus"},
+		{"ptKey":"Aplicar","translation":"Apply"},
+		{"ptKey":"Dinheiro","translation":"Money"},
+		{"ptKey":"Anterior","translation":"Before"},
+		{"ptKey":"Custos","translation":"Costs"},
+		{"ptKey":"Receitas","translation":"Income"},
+		{"ptKey":"Total","translation":"Total"},
+		{"ptKey":"População","translation":"Population"},		
+		{"ptKey":"Mudança","translation":"Change"},		
+		{"ptKey":"Aviso!","translation":"Warning!"},		
+		{"ptKey":"Você já tem o máximo de promessas permitidas!","translation":"You already have as many goals as you can!"},		
+		{"ptKey":"Objetivos","translation":"Goals"},		
+		{"ptKey":"Crises Resolvidas","translation":"Resolved Issues"},		
+		{"ptKey":"Crescimento Populacional","translation":"Population Growth"},	
+		{"ptKey":"Créditos","translation":"Credits"},
+		{"ptKey":"Final","translation":"Final"}
+		
+	]
+}
