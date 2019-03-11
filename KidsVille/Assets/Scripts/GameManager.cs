@@ -126,7 +126,7 @@ public class GameManager : MainScript
         {
             if (countDaysTax >= daysToIncrement_buildsTax)
             {
-                Debug.Log("Dia de verificar se há taxa." + day + " / " + month + " / " + year);
+                Debug.Log("Dia de verificar se há taxa. " + day + " / " + month + " / " + year);
                 countDaysTax = 0;
 
                 float taxChance = (float)player.GetPopulation() * 0.1f;

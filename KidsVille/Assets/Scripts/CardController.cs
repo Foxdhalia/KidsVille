@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardController : MonoBehaviour
+public class CardController : MainScript
 {
     private GameManager gm;
     private PlayerData player;
@@ -51,7 +51,7 @@ public class CardController : MonoBehaviour
     [SerializeField] private GameObject[] buyEvent_BoxBt = new GameObject[2];
     [SerializeField] private GameObject buyNothing; // Container de botão para quando o jogador não tem ouro para os eventos sorteados.
     private Button[] buyEvent_Bt = new Button[2];
-    
+
 
     [Header("UI -> Cartas de Promessas.")]
     [SerializeField] private GameObject goalCard_MainPanel;
@@ -84,7 +84,7 @@ public class CardController : MonoBehaviour
     [SerializeField] private AudioClip newEvent;
     [SerializeField] private AudioClip basicClick;
     [SerializeField] private AudioClip failSound;
-    
+
 
     void Start()
     {
@@ -237,7 +237,7 @@ public class CardController : MonoBehaviour
         {
             penalty = -1 * (tempEventCards[n].income * penalty_ForPass);
             player.ChangeIndexValue(2, penalty);
-        }        
+        }
     }
 
 
@@ -326,7 +326,7 @@ public class CardController : MonoBehaviour
                 }
             }
 
-            if(expensiveEvent >= 2) // Se os 2 eventos são caros demais para o jogador, o botão de não comprar nada aparece.
+            if (expensiveEvent >= 2) // Se os 2 eventos são caros demais para o jogador, o botão de não comprar nada aparece.
             {
                 buyNothing.SetActive(true);
             }
@@ -726,14 +726,22 @@ public class CardController : MonoBehaviour
             {
                 audio.PlayOneShot(failSound);
                 warningPanel.SetActive(true);
-                warningPanel.transform.GetChild(1).GetComponent<Text>().text = "Você já tem o máximo de promessas permitidas!";
+
+                if (lang == "pt")
+                    warningPanel.transform.GetChild(1).GetComponent<Text>().text = "Você já tem o máximo de promessas permitidas!";
+                else if (lang == "en")
+                    warningPanel.transform.GetChild(1).GetComponent<Text>().text = "You already have as many goals as you can!";
             }
         }
         else if (player.gold < newGoalCardPrice && allGoalsList.Count > 0)
         {
             audio.PlayOneShot(failSound);
             warningPanel.SetActive(true);
-            warningPanel.transform.GetChild(1).GetComponent<Text>().text = "Você não tem recursos suficientes para compra!";
+
+            if (lang == "pt")
+                warningPanel.transform.GetChild(1).GetComponent<Text>().text = "Você não tem recursos suficientes para compra!";
+            else if (lang == "en")
+                warningPanel.transform.GetChild(1).GetComponent<Text>().text = "You don't have enough money!";
         }
 
         // Verifica se ainda existe cartas de promessa para serem compradas. Em caso negativo, desabilita o monte.

@@ -7,11 +7,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class Translation : MainScript
+public class Translation : LanguageController
 {
-    public static Translation instance; 
-
-    string path;
+    string pathDictionarie;
     private Dictionary<string, string> localizedText;
 
     [Header("GameObjects de textos a serem modificados conforme o idioma:")]
@@ -26,26 +24,46 @@ public class Translation : MainScript
 
     private void Awake()
     {
-        if (instance)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
-       
-
 #if UNITY_ANDROID
-        path = "jar:file://" + Application.dataPath + "!/assets/";
+        pathDictionarie = "jar:file://" + Application.dataPath + "!/assets/";
 #else
                          path = Application.dataPath + "/StreamingAssets";
 #endif
 
+    }
 
-       
+    private void Start()
+    {
+        path = Application.persistentDataPath + "/languageKV.dat";
+        
+        if (lang == "" && !File.Exists(path))
+        {
+            SaveData("pt");
+        }
+        else if (File.Exists(path))
+        {
+            StreamReader sr = new StreamReader(path);
+            SaveLanguageData data = new SaveLanguageData();
+            data = JsonUtility.FromJson<SaveLanguageData>(sr.ReadLine());
+            sr.Close();
+
+            lang = data.language;
+
+
+            print("File loaded from " + path);
+
+            if (lang == "pt")
+            {
+                timePassing = true;
+                langBefore = data.languageBefore;
+                print(lang + " " + langBefore);
+                return;
+            }
+            else
+            {
+                StartTranslation(lang);
+            }
+        }
     }
 
     public IEnumerator Translations(string fileName)
@@ -104,7 +122,7 @@ public class Translation : MainScript
             for (int i = 0; i < language.items.Length; i++)
             {
                 localizedText.Add(language.items[i].ptKey, language.items[i].translation);
-                print(i + ": " + localizedText[language.items[i].ptKey]);
+             //   print(i + ": " + localizedText[language.items[i].ptKey]);
             }
             Debug.Log("Data loaded, dictionary contains: " + localizedText.Count + " entries");
             completeFileSearch = 1;
@@ -136,14 +154,37 @@ public class Translation : MainScript
             accentuation.SetActive(false);
         }
     }
+    public void Enable_ptAccents()
+    {
+        foreach (GameObject accentuation in accent)
+        {
+            accentuation.SetActive(true);
+        }
+    }
 
     public void Chang_UIImages()
     {
-        foreach(ImagesWithText iwt in uiImages)
+        if (lang == "en")
         {
-            iwt.ptImg.SetActive(false);
-            iwt.enImg.SetActive(true);
+            foreach (ImagesWithText iwt in uiImages)
+            {
+                iwt.ptImg.SetActive(false);
+                iwt.enImg.SetActive(true);
+            }
         }
+        else if (lang == "pt")
+        {
+            foreach (ImagesWithText iwt in uiImages)
+            {
+                iwt.ptImg.SetActive(true);
+                iwt.enImg.SetActive(false);
+            }
+        }
+    }
+
+    public string GetLang()
+    {
+        return lang;
     }
 }
 

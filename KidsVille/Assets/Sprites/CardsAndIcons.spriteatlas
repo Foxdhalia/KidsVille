@@ -35,7 +35,7 @@ SpriteAtlas:
     - {fileID: 102900000, guid: cc902e217b85f4a4db3d35e9ad6d441e, type: 3}
     - {fileID: 102900000, guid: 8570a3608bf3d4e4e8b43eda5a4cb93f, type: 3}
     - {fileID: 102900000, guid: d04c216297fbf8d4c8f86d1df8e9ee32, type: 3}
-    totalSpriteSurfaceArea: 8473878
+    totalSpriteSurfaceArea: 8736022
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -86,6 +86,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9ca106ca06678d64587b19f0530dda21, type: 3}
   - {fileID: 21300000, guid: a9ce062bcd2e04b4fa1a155561ad7203, type: 3}
   - {fileID: 21300000, guid: b37abf2b63be89049bd5448879208fad, type: 3}
+  - {fileID: 21300000, guid: 19decc8b1819bd1428a87d722af5aa59, type: 3}
   - {fileID: 21300000, guid: 9e09abab4fd702340b9611ed11efe210, type: 3}
   - {fileID: 21300000, guid: a871e9fbab246664abab1f760ce8bd1d, type: 3}
   - {fileID: 21300000, guid: 53fe930c47c017047b739ec3d1d88b77, type: 3}
@@ -145,6 +146,7 @@ SpriteAtlas:
   - RelatorioFinalEN
   - CardFaixa
   - ButtonPress
+  - Settings_PH
   - IconCart
   - BaseStat
   - CardBaseSide

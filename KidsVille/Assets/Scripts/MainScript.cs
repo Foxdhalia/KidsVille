@@ -10,23 +10,14 @@ public class MainScript : MonoBehaviour
 {
     public static bool finishGame;
     public static bool timePassing; // Para gerenciar se a contagem dos dias está correndo ou não.
-    public static string lang = "en";
+    public static string lang;
+    public static string langBefore;
     protected static int month = 1, day = 1, year = 0; // autoexplicativo... 
 
-    private void Start()
+
+    private void Awake()
     {
-        if (lang == "pt")
-        {
-            timePassing = true;
-            return;
-        }
-        else if (lang == "en")
-        {
-            Translation translation = FindObjectOfType<Translation>();
-            StartCoroutine(translation.Translations("en_Translation.json"));
-            translation.Disable_ptAccents();
-            translation.Chang_UIImages();
-        }
+        timePassing = false;
     }
 
     public void SetTimePassing(bool isTimePassing)
