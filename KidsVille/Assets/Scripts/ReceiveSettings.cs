@@ -18,11 +18,30 @@ public class ReceiveSettings : MonoBehaviour
 
     public void ChangeLanguage()
     {
+        Translation tr = FindObjectOfType<Translation>();
         LanguageController lc = FindObjectOfType<LanguageController>();
         if (lc.CheckForLanguageChanges(language))
-            lc.StartTranslation(language);
+        {            
+            //lc.LoadJsonDictionary(language);
+            tr.StartTranslation(language);            
+        }
         else
-            print("Nenhuma mudança no idioma.");
+        {
+            print("Language not changed.");
+        }
     }
+
+    /* public void ChangeLanguage()
+     {
+         LanguageController lc = FindObjectOfType<LanguageController>();
+         if (lc.CheckForLanguageChanges(language))
+         {
+             lc.StartTranslation(language);
+         }
+         else
+         {
+             print("Language not changed.");
+         }
+     }*/
 
 }

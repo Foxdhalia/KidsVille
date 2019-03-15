@@ -6,11 +6,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
-public class Translation : LanguageController
+public class Translation : MainScript
 {
-    string pathDictionarie;
+    LanguageController lc;
+
     private Dictionary<string, string> localizedText;
+    private string pathDictionarie;
 
     [Header("GameObjects de textos a serem modificados conforme o idioma:")]
     public GameObject[] gameTexts;
@@ -22,53 +25,95 @@ public class Translation : LanguageController
     [SerializeField] private ImagesWithText[] uiImages;
     int completeFileSearch; // 1 para caso seja encontrado, -1 para caso não seja encontrado.
 
-    private void Awake()
-    {
-#if UNITY_ANDROID
-        pathDictionarie = "jar:file://" + Application.dataPath + "!/assets/";
-#else
-                         path = Application.dataPath + "/StreamingAssets";
-#endif
 
-    }
+    public Text tx;
 
     private void Start()
     {
-        path = Application.persistentDataPath + "/languageKV.dat";
-        
-        if (lang == "" && !File.Exists(path))
+        languageDataPath = Application.persistentDataPath + "/languageKV.dat";
+        tx.text = languageDataPath + "\n";
+
+        if (SceneManager.GetActiveScene().name == "MenuScene")
         {
-            SaveData("pt");
-        }
-        else if (File.Exists(path))
-        {
-            StreamReader sr = new StreamReader(path);
-            SaveLanguageData data = new SaveLanguageData();
-            data = JsonUtility.FromJson<SaveLanguageData>(sr.ReadLine());
-            sr.Close();
-
-            lang = data.language;
-
-
-            print("File loaded from " + path);
-
-            if (lang == "pt")
+            if (!File.Exists(languageDataPath))
             {
-                timePassing = true;
-                langBefore = data.languageBefore;
-                print(lang + " " + langBefore);
-                return;
+                SaveData("pt");
+                print("Create file for storage language values. Default value = 'pt'.");
+                lang = "pt";
+                langBefore = "pt";
+
+                tx.text += "File NOT exists. " + "lang: " + lang + ", langBefore: " + langBefore + "\n";
             }
-            else
+            else if (File.Exists(languageDataPath))
+            {
+                StreamReader sr = new StreamReader(languageDataPath);
+                SaveLanguageData data = new SaveLanguageData();
+                data = JsonUtility.FromJson<SaveLanguageData>(sr.ReadLine());
+                sr.Close();
+
+                lang = data.language;
+                langBefore = data.languageBefore;
+
+                print("File loaded from " + languageDataPath + " with language " + lang + ".");
+                tx.text += "File exist. " + "lang: " + lang + ", langBefore: " + langBefore + "\n";
+
+                if (lang == "pt")
+                {
+                    timePassing = true;
+                    //langBefore = "pt";                
+                    return;
+                }
+                else
+                {
+                    StartTranslation(lang);
+                }
+            }
+        }
+        else
+        {
+            tx.text = "lang: " + lang + ", langBefore: " + langBefore;
+            if (lang != "pt")
             {
                 StartTranslation(lang);
             }
         }
     }
 
-    public IEnumerator Translations(string fileName)
+    public void StartTranslation(string newLanguage)
     {
-        StartCoroutine(ReadJsonArchive(fileName));
+        timePassing = false;
+        lc = FindObjectOfType<LanguageController>();
+        lang = newLanguage;
+        langBefore = newLanguage;
+        lc.LoadJsonDictionary(newLanguage);
+        tx.text += "Start translation. " + "newLanguage: " + newLanguage;
+
+        if (newLanguage == "pt")
+        {
+            StartCoroutine(Translations(lc.GetJsonDictionary()));
+            Enable_ptAccents();
+            Chang_UIImages();
+        }
+        else if (newLanguage == "en")
+        {
+            tx.text += " => entrou" + "\n";
+           StartCoroutine(Translations(lc.GetJsonDictionary()));
+            Disable_ptAccents();
+            Chang_UIImages();
+        }
+
+        
+            SaveData(newLanguage);
+        
+
+        tx.text += "New save. " + "lang: " + lang + ", langBefore: " + langBefore + "\n";
+
+        timePassing = true;
+    }
+
+    public IEnumerator Translations(string langDictionary)
+    {
+        ReadJsonArchive(langDictionary);
         yield return new WaitUntil(() => completeFileSearch != 0);
 
         if (completeFileSearch == 1)
@@ -77,12 +122,14 @@ public class Translation : LanguageController
             {
                 if (g.GetComponent<TextMeshProUGUI>())
                 {
-                    string s = GetLocalizedValue(g.GetComponent<TextMeshProUGUI>().text);
+                    KeyData k = g.GetComponent<KeyData>();
+                    string s = GetLocalizedValue(k.GetKey());
                     g.GetComponent<TextMeshProUGUI>().text = s;
                 }
                 else if (g.GetComponent<Text>())
                 {
-                    string s = GetLocalizedValue(g.GetComponent<Text>().text);
+                    KeyData k = g.GetComponent<KeyData>();
+                    string s = GetLocalizedValue(k.GetKey());
                     g.GetComponent<Text>().text = s;
                 }
             }
@@ -96,40 +143,28 @@ public class Translation : LanguageController
     }
 
     // Encontra o arquivo de tradução:
-    IEnumerator ReadJsonArchive(string fileName)
+    void ReadJsonArchive(string langDictionary)
     {
         localizedText = new Dictionary<string, string>();
-        string filePath = Path.Combine(Application.streamingAssetsPath + "/", fileName);
+        //string filePath = Path.Combine(Application.streamingAssetsPath + "/", fileName);
+        //string filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", fileName);
 
-        string dataAsJson;
-
-        if (filePath.Contains("://") || filePath.Contains(":///"))
-        {
-            UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(filePath);
-            yield return www.SendWebRequest();
-
-            dataAsJson = www.downloadHandler.text;
-        }
-        else
-        {
-            dataAsJson = File.ReadAllText(filePath);
-        }
-
+        string dataAsJson = langDictionary;
         if (dataAsJson != "")
         {
             LanguageData language = JsonUtility.FromJson<LanguageData>(dataAsJson);
 
             for (int i = 0; i < language.items.Length; i++)
             {
-                localizedText.Add(language.items[i].ptKey, language.items[i].translation);
-             //   print(i + ": " + localizedText[language.items[i].ptKey]);
+                localizedText.Add(language.items[i].key, language.items[i].translation);
+                //   print(i + ": " + localizedText[language.items[i].key]);
             }
             Debug.Log("Data loaded, dictionary contains: " + localizedText.Count + " entries");
             completeFileSearch = 1;
         }
         else
         {
-            Debug.LogError("Cannot find file at " + filePath + ".");
+            Debug.LogError("Não foi possível achar/ler o arquivo de tradução.");
             completeFileSearch = -1;
         }
 
@@ -138,7 +173,7 @@ public class Translation : LanguageController
     // Encontra a palavra a ser traduzida:
     string GetLocalizedValue(string key)
     {
-        string result = "ptKey was not found.";
+        string result = "key was not found.";
 
         if (localizedText.ContainsKey(key))
         {
@@ -186,6 +221,29 @@ public class Translation : LanguageController
     {
         return lang;
     }
+
+    public void SaveData(string newLanguage)
+    {
+        SaveLanguageData data = new SaveLanguageData();
+        data.language = newLanguage;
+        data.languageBefore = newLanguage;
+
+        //lang = newLanguage;
+        //langBefore = newLanguage;
+
+        if (!File.Exists(languageDataPath)) // Check if the file need to be created.
+        {
+            FileStream file = File.Create(languageDataPath);
+            file.Close();
+        }
+
+        StreamWriter sw = new StreamWriter(languageDataPath);
+        sw.WriteLine(JsonUtility.ToJson(data));
+        sw.Close();
+
+        print("File saved at " + languageDataPath);
+        tx.text += "SaveData. " + "data.language: " + data.language + ", data.languageBefore: " + data.languageBefore + "\n";
+    }
 }
 
 [Serializable]
@@ -197,7 +255,7 @@ public class LanguageData
 [Serializable]
 public class WordDictionary
 {
-    public string ptKey;
+    public string key;
     public string translation;
 
 }

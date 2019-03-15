@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LanguageController : MainScript
 {
-    LanguageController instance;
-    protected string path;
+    public TextAsset[] languageDictionaries = new TextAsset[2];
+
+    public static LanguageController instance;
+    public static string jsonDictionary;
+    public static string[] jsonDictionaries =  new string[2];
+
+    //public Text tx;
 
     void Awake()
     {
@@ -17,71 +23,16 @@ public class LanguageController : MainScript
         else
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this.gameObject);
         }
-
-        path = Application.persistentDataPath + "/languageKV.dat";
     }
 
-    /*private void Start()
+    private void Start()
     {
-        path = Application.persistentDataPath + "/languageKV.dat";
-        if (lang == "" && !File.Exists(path))
+        for(int i = 0; i < 2; i++)
         {
-            SaveData("pt");           
+            jsonDictionaries[i] = languageDictionaries[i].text;           
         }
-        else if (File.Exists(path))
-        {
-            StreamReader sr = new StreamReader(path);
-            SaveLanguageData data = new SaveLanguageData();
-            data = JsonUtility.FromJson<SaveLanguageData>(sr.ReadLine());
-            sr.Close();
-
-            lang = data.language;
-            
-
-            print("File loaded from " + path);
-
-            if (lang == "pt")
-            {
-                timePassing = true;
-                langBefore = data.languageBefore;
-                print(lang + " " + langBefore);
-                return;
-            }
-            else
-            {
-                StartTranslation(lang);
-            }
-        }
-    }*/
-
-    public void StartTranslation(string newLanguage)
-    {
-        timePassing = false;
-        lang = newLanguage;
-
-        if (newLanguage == "pt")
-        {
-            Translation translation = FindObjectOfType<Translation>();
-            StartCoroutine(translation.Translations("pt_Translation.json"));
-            translation.Enable_ptAccents();
-            translation.Chang_UIImages();
-        }
-        else if (newLanguage == "en")
-        {
-            Translation translation = FindObjectOfType<Translation>();
-            StartCoroutine(translation.Translations("en_Translation.json"));
-            translation.Disable_ptAccents();
-            translation.Chang_UIImages();
-        }
-
-        if (lang != langBefore)
-        {
-            SaveData(newLanguage);
-        }
-
-        timePassing = true;
     }
 
     public void SetLanguage(string newLanguage)
@@ -91,29 +42,40 @@ public class LanguageController : MainScript
 
     public bool CheckForLanguageChanges(string newLanguage)
     {
-        if (newLanguage == langBefore)
-            return false;
+        if (newLanguage == "pt" || newLanguage == "en")
+        {
+            if (newLanguage == langBefore)
+            {
+                print("new language: " + newLanguage + ", languageBefore: " + langBefore);
+                return false;
+            }
+            else
+            {
+                print("new language: " + newLanguage + ", languageBefore: " + langBefore);                
+                return true;
+            }
+        }
         else
-            return true;
+        {
+            return false;
+        }
     }
+   
 
-    public void SaveData(string newLanguage)
+    public string GetJsonDictionary()
     {
-        SaveLanguageData data = new SaveLanguageData();
-        data.language = newLanguage;
-        data.languageBefore = newLanguage;
-
-        lang = newLanguage;
-        langBefore = newLanguage;
-
-        // FileStream file = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-        StreamWriter sw = new StreamWriter(path);
-
-        sw.WriteLine(JsonUtility.ToJson(data));
-
-        sw.Close();
-
-        print("File saved at " + path);
+        return jsonDictionary;
+    }
+    public void LoadJsonDictionary(string newLanguage)
+    {
+        if (newLanguage == "pt")
+        {
+            jsonDictionary = jsonDictionaries[0];
+        }
+        else if (newLanguage == "en")
+        {
+            jsonDictionary = jsonDictionaries[1];
+        }
     }
 }
 

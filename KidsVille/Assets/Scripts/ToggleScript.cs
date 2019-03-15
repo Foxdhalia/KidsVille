@@ -12,7 +12,7 @@ public class ToggleScript : MonoBehaviour
     private void Start()
     {
         toggle = GetComponent<Toggle>();
-        if (langValue == translation.GetLang())
+        if (langValue == translation.GetLang() || (langValue == "pt" && translation.GetLang() == ""))
         {
             toggle.isOn = true;
         }
@@ -32,12 +32,12 @@ public class ToggleScript : MonoBehaviour
         }
     }
 
-    public void CheckToggleValue()
+    /*public void CheckToggleValue()
     {
         if (toggle.isOn)
         {
             ReceiveSettings receiver = FindObjectOfType<ReceiveSettings>();
             receiver.SetLanguage(langValue);
         }
-    }
+    }*/
 }

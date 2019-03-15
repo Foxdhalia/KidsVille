@@ -1,0 +1,29 @@
+﻿{
+	"items":
+	[
+		{"key":"Jogar","translation":"Jogar"},
+		{"key":"Comprar","translation":"Comprar"},
+		{"key":"Sair sem comprar.","translation":"Sair sem comprar."},
+		{"key":"Ano","translation":"Ano"},
+		{"key":"Mes","translation":"Mes"},
+		{"key":"Dia","translation":"Dia"},
+		{"key":"Promessas","translation":"Promessas"},
+		{"key":"Bonus","translation":"Bonus"},
+		{"key":"Aplicar","translation":"Aplicar"},
+		{"key":"Dinheiro","translation":"Dinheiro"},
+		{"key":"Anterior","translation":"Anterior"},
+		{"key":"Custos","translation":"Custos"},
+		{"key":"Receitas","translation":"Receitas"},
+		{"key":"Total","translation":"Total"},
+		{"key":"População","translation":"População"},		
+		{"key":"Mudança","translation":"Mudança"},		
+		{"key":"Aviso!","translation":"Aviso!"},		
+		{"key":"Você já tem o máximo de promessas permitidas!","translation":"Você já tem o máximo de promessas permitidas!"},		
+		{"key":"Objetivos ","translation":"Objetivos "},		
+		{"key":"Crises Resolvidas","translation":"Crises Resolvidas"},		
+		{"key":"Crescimento Populacional","translation":"Crescimento Populacional"},	
+		{"key":"Credits","translation":"Créditos"},
+		{"key":"Final","translation":"Final"}
+		
+	]
+}

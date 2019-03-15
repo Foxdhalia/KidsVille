@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7843036876182114572}
   - component: {fileID: 7843036876182114570}
   - component: {fileID: 7843036876182114571}
+  - component: {fileID: 2885681899584109727}
   m_Layer: 5
   m_Name: YearTx
   m_TagString: Untagged
@@ -161,6 +162,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2885681899584109727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7843036876182114573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031420da31cff8e4d9dfeb961080c3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyData: Ano
 --- !u!1 &7843036876933085455
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +264,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7843036877360086015}
   m_Layer: 5
-  m_Name: Year_
+  m_Name: CalendarLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

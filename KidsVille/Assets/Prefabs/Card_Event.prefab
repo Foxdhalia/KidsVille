@@ -3592,6 +3592,7 @@ GameObject:
   - component: {fileID: 931659417392773251}
   - component: {fileID: 878040661678086915}
   - component: {fileID: 792601618045632708}
+  - component: {fileID: 7338577427601055497}
   m_Layer: 5
   m_Name: TextMeshPro Text
   m_TagString: Language
@@ -3742,6 +3743,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7338577427601055497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7329347085291054612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031420da31cff8e4d9dfeb961080c3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyData: Comprar
 --- !u!1 &7346036218757528644
 GameObject:
   m_ObjectHideFlags: 0

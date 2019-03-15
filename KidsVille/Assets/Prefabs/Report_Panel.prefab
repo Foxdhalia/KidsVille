@@ -206,6 +206,7 @@ GameObject:
   - component: {fileID: 6677537202008250551}
   - component: {fileID: 6677537202008250549}
   - component: {fileID: 6677537202008250548}
+  - component: {fileID: 744118827468237772}
   m_Layer: 5
   m_Name: Money_Tx
   m_TagString: Untagged
@@ -355,6 +356,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &744118827468237772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6677537202008250550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031420da31cff8e4d9dfeb961080c3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyData: Dinheiro
 --- !u!1 &6677537202022964061
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,6 +459,7 @@ GameObject:
   - component: {fileID: 6677537202153545492}
   - component: {fileID: 6677537202153545706}
   - component: {fileID: 6677537202153545493}
+  - component: {fileID: 4457186345232544464}
   m_Layer: 5
   m_Name: Anterior_Tx
   m_TagString: Untagged
@@ -513,6 +528,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Anterior
+--- !u!114 &4457186345232544464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6677537202153545495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031420da31cff8e4d9dfeb961080c3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyData: Anterior
 --- !u!1 &6677537202184622623
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,6 +552,7 @@ GameObject:
   - component: {fileID: 6677537202184622620}
   - component: {fileID: 6677537202184622610}
   - component: {fileID: 6677537202184622621}
+  - component: {fileID: 6415164375088351754}
   m_Layer: 5
   m_Name: Total_tx
   m_TagString: Untagged
@@ -592,6 +621,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Final
+--- !u!114 &6415164375088351754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6677537202184622623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031420da31cff8e4d9dfeb961080c3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyData: Final
 --- !u!1 &6677537202266167893
 GameObject:
   m_ObjectHideFlags: 0
@@ -761,6 +803,7 @@ GameObject:
   - component: {fileID: 6677537202353874485}
   - component: {fileID: 6677537202353874443}
   - component: {fileID: 6677537202353874442}
+  - component: {fileID: 7921262901982934323}
   m_Layer: 5
   m_Name: Receitas_Tx
   m_TagString: Untagged
@@ -831,6 +874,19 @@ MonoBehaviour:
   m_Text: 'Receitas
 
 '
+--- !u!114 &7921262901982934323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6677537202353874484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031420da31cff8e4d9dfeb961080c3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyData: Receitas
 --- !u!1 &6677537202553381526
 GameObject:
   m_ObjectHideFlags: 0
@@ -953,6 +1009,7 @@ GameObject:
   - component: {fileID: 6677537202869438409}
   - component: {fileID: 6677537202869438415}
   - component: {fileID: 6677537202869438414}
+  - component: {fileID: 773080625411440021}
   m_Layer: 5
   m_Name: Custos_Tx
   m_TagString: Untagged
@@ -1021,3 +1078,16 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Custos
+--- !u!114 &773080625411440021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6677537202869438408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031420da31cff8e4d9dfeb961080c3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyData: Custos

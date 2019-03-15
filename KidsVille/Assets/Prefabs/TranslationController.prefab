@@ -43,3 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a012eafe7d8b37641b238c4a5e40fc9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  languageDictionaries:
+  - {fileID: 4900000, guid: 3000cd2b60cd0ed42800753ee19f0528, type: 3}
+  - {fileID: 4900000, guid: 93096c4bd2ffa904eb78bec510e613b4, type: 3}
