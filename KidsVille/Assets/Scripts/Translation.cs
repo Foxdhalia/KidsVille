@@ -35,6 +35,23 @@ public class Translation : MainScript
 
         if (SceneManager.GetActiveScene().name == "MenuScene")
         {
+            //...
+        }
+        else
+        {
+            tx.text = "lang: " + lang + ", langBefore: " + langBefore;
+            if (lang != "pt")
+            {
+                StartTranslation(lang);
+            }
+        }
+    }
+
+    public void StartMenuScene()
+    {
+        languageDataPath = Application.persistentDataPath + "/languageKV.dat";
+        if (SceneManager.GetActiveScene().name == "MenuScene")
+        {
             if (!File.Exists(languageDataPath))
             {
                 SaveData("pt");
@@ -67,14 +84,6 @@ public class Translation : MainScript
                 {
                     StartTranslation(lang);
                 }
-            }
-        }
-        else
-        {
-            tx.text = "lang: " + lang + ", langBefore: " + langBefore;
-            if (lang != "pt")
-            {
-                StartTranslation(lang);
             }
         }
     }

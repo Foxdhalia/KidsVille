@@ -33,6 +33,9 @@ public class LanguageController : MainScript
         {
             jsonDictionaries[i] = languageDictionaries[i].text;           
         }
+
+        Translation translation = FindObjectOfType<Translation>();
+        translation.StartMenuScene();
     }
 
     public void SetLanguage(string newLanguage)
